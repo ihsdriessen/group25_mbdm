@@ -159,16 +159,21 @@ def get_model_for_problem_formulation(problem_formulation_id):
     # 3-objectives PF:
     elif problem_formulation_id == 1:
         damage_variables = []
-        cost_variables = []
+        rfr_cost_variables = []
+        dike_cost_variables = []
 
         damage_variables.extend(
             [f"{dike}_Expected Annual Damage" for dike in function.dikelist]
         )
 
-        cost_variables.extend(
+        rfr_cost_variables.extend(
             [f"RfR Total Costs"]
-
         )
+
+        dike_cost_variables.extend(
+            [f"{dike}_Dike Investment Costs" for dike in function.dikelist]
+        )
+
 
         dike_model.outcomes = [
             ScalarOutcome(
@@ -179,7 +184,13 @@ def get_model_for_problem_formulation(problem_formulation_id):
             ),
             ScalarOutcome(
                 "RfR Total Costs",
-                variable_name=[var for var in cost_variables],
+                variable_name=[var for var in rfr_cost_variables],
+                function=sum_over,
+                kind=direction,
+            ),
+            ScalarOutcome(
+                "Dike Investment Costs",
+                variable_name=[var for var in rfr_cost_variables],
                 function=sum_over,
                 kind=direction,
             ),
