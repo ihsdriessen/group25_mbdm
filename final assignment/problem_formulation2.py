@@ -141,7 +141,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
         dike_cost_variables = []
 
         damage_variables.extend(
-            [f"{dike}_Expected Annual Damage" for dike in function.dikelist]
+            [f"{dike}_Expected Annual Damage" for dike in ['A.1', 'A.2', 'A.3']]
         )
 
         rfr_cost_variables.extend(
@@ -149,7 +149,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
         )
 
         dike_cost_variables.extend(
-            [f"{dike}_Dike Investment Costs" for dike in function.dikelist]
+            [f"{dike}_Dike Investment Costs" for dike in ['A.1', 'A.2', 'A.3']]
         )
 
 
@@ -181,7 +181,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
         cost_variables.extend(
             [
                 f"{dike}_Expected Annual Damage"
-                for dike in function.dikelist
+                for dike in ['A.1', 'A.2', 'A.3']
             ]
         )
 
@@ -189,7 +189,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
 
         dike_model.outcomes = [
             ScalarOutcome(
-                "All Costs",
+                "Rfr + Annual Damage Costs",
                 variable_name=[var for var in cost_variables],
                 function=sum_over,
                 kind=direction,
@@ -204,7 +204,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
         casuality_variables = []
 
         dike_cost_variables.extend(
-            [f"{dike}_Dike Investment Costs" for dike in function.dikelist]
+            [f"{dike}_Dike Investment Costs" for dike in ['A.3']]
         )
 
         dike_model.outcomes = [
@@ -232,49 +232,37 @@ def get_model_for_problem_formulation(problem_formulation_id):
 
     # FOURTH PROBLEM FORMULATION of Doesburg and Cortenoever
     elif problem_formulation_id == 3:
-        outcomes = []
 
-        for dike in function.dikelist:
-            cost_variables = []
-            for e in ["Expected Annual Damage", "Dike Investment Costs"]:
-                cost_variables.append(f"{dike}_{e}")
+        dike_cost_variables = []
+        evac_cost_variables = []
+        casuality_variables = []
 
-            outcomes.append(
-                ScalarOutcome(
-                    f"{dike} Total Costs",
-                    variable_name=[var for var in cost_variables],
-                    function=sum_over,
-                    kind=direction,
-                )
-            )
-
-            outcomes.append(
-                ScalarOutcome(
-                    f"{dike}_Expected Number of Deaths",
-                    variable_name=f"{dike}_Expected Number of Deaths",
-                    function=sum_over,
-                    kind=direction,
-                )
-            )
-
-        outcomes.append(
-            ScalarOutcome(
-                "RfR Total Costs",
-                variable_name="RfR Total Costs",
-                function=sum_over,
-                kind=direction,
-            )
-        )
-        outcomes.append(
-            ScalarOutcome(
-                "Expected Evacuation Costs",
-                variable_name="Expected Evacuation Costs",
-                function=sum_over,
-                kind=direction,
-            )
+        dike_cost_variables.extend(
+            [f"{dike}_Dike Investment Costs" for dike in ['A.1', 'A.2']]
         )
 
-        dike_model.outcomes = outcomes
+        dike_model.outcomes = [
+
+
+            ScalarOutcome(
+                "Dike Investment Costs",
+                variable_name=[var for var in dike_cost_variables],
+                function=sum_over,
+                kind=direction,
+            ),
+            ScalarOutcome(
+                "Evacuation Costs",
+                variable_name=[var for var in evac_cost_variables],
+                function=sum_over,
+                kind=direction,
+            ),
+            ScalarOutcome(
+                "Expected Number of Deaths",
+                variable_name=[var for var in casuality_variables],
+                function=sum_over,
+                kind=direction,
+            ),
+        ]
 
     # FIFTH PROBLEM FORMULATION of Overijssel
     elif problem_formulation_id == 4:
@@ -284,7 +272,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
             ArrayOutcome(
                 f"Expected Annual Damage",
                 variable_name=[
-                    f"{dike}_Expected Annual Damage" for dike in function.dikelist
+                    f"{dike}_Expected Annual Damage" for dike in ['A.4', 'A.5']
                 ],
                 function=sum_over_time,
             )
@@ -294,44 +282,34 @@ def get_model_for_problem_formulation(problem_formulation_id):
             ArrayOutcome(
                 f"Dike Investment Costs",
                 variable_name=[
-                    f"{dike}_Dike Investment Costs" for dike in function.dikelist
+                    f"{dike}_Dike Investment Costs" for dike in ['A.4', 'A.5']
                 ],
                 function=sum_over_time,
             )
         )
 
-        outcomes.append(
-            ArrayOutcome(
-                f"Expected Number of Deaths",
-                variable_name=[
-                    f"{dike}_Expected Number of Deaths" for dike in function.dikelist
-                ],
-                function=sum_over_time,
-            )
-        )
 
         outcomes.append(ArrayOutcome(f"RfR Total Costs"))
-        outcomes.append(ArrayOutcome(f"Expected Evacuation Costs"))
 
         dike_model.outcomes = outcomes
 
-    # Fully disaggregated:
-    elif problem_formulation_id == 5:
-        outcomes = []
-
-        for dike in function.dikelist:
-            for entry in [
-                "Expected Annual Damage",
-                "Dike Investment Costs",
-                "Expected Number of Deaths",
-            ]:
-
-                o = ArrayOutcome(f"{dike}_{entry}")
-                outcomes.append(o)
-
-        outcomes.append(ArrayOutcome("RfR Total Costs"))
-        outcomes.append(ArrayOutcome("Expected Evacuation Costs"))
-        dike_model.outcomes = outcomes
+    # # Fully disaggregated:
+    # elif problem_formulation_id == 5:
+    #     outcomes = []
+    #
+    #     for dike in function.dikelist:
+    #         for entry in [
+    #             "Expected Annual Damage",
+    #             "Dike Investment Costs",
+    #             "Expected Number of Deaths",
+    #         ]:
+    #
+    #             o = ArrayOutcome(f"{dike}_{entry}")
+    #             outcomes.append(o)
+    #
+    #     outcomes.append(ArrayOutcome("RfR Total Costs"))
+    #     outcomes.append(ArrayOutcome("Expected Evacuation Costs"))
+    #     dike_model.outcomes = outcomes
 
     else:
         raise TypeError("unknown identifier")
