@@ -134,30 +134,8 @@ def get_model_for_problem_formulation(problem_formulation_id):
     # Outcomes are all costs, thus they have to minimized:
     direction = ScalarOutcome.MINIMIZE
 
-    # 2-objective PF:
+    # OUR OWN PROBLEM FORMULATION VELUWE
     if problem_formulation_id == 0:
-        cost_variables = []
-
-        cost_variables.extend(
-            [
-                f"{dike}_Expected Annual Damage"
-                for dike in function.dikelist
-            ]
-        )
-
-        cost_variables.extend([f"RfR Total Costs"])
-
-        dike_model.outcomes = [
-            ScalarOutcome(
-                "All Costs",
-                variable_name=[var for var in cost_variables],
-                function=sum_over,
-                kind=direction,
-            )
-        ]
-
-    # 3-objectives PF:
-    elif problem_formulation_id == 1:
         damage_variables = []
         rfr_cost_variables = []
         dike_cost_variables = []
@@ -196,42 +174,45 @@ def get_model_for_problem_formulation(problem_formulation_id):
             ),
         ]
 
-    # 5-objectives PF:
-    elif problem_formulation_id == 2:
-        damage_variables = []
-        dike_cost_variables = []
-        rfr_costs_variables = []
-        evac_cost_variables = []
-        casuality_varaibles = []
+    # SECOND PROBLEM FORMULATION VELUWE with RfR Tot + Annual Damage
+    elif problem_formulation_id == 1:
+        cost_variables = []
 
-        damage_variables.extend(
-            [f"{dike}_Expected Annual Damage" for dike in function.dikelist]
+        cost_variables.extend(
+            [
+                f"{dike}_Expected Annual Damage"
+                for dike in function.dikelist
+            ]
         )
-        dike_cost_variables.extend(
-            [f"{dike}_Dike Investment Costs" for dike in function.dikelist]
-        )
-        rfr_costs_variables.extend([f"RfR Total Costs"])
-        evac_cost_variables.extend([f"Expected Evacuation Costs"])
-        casuality_varaibles.extend(
-            [f"{dike}_Expected Number of Deaths" for dike in function.dikelist]
-        )
+
+        cost_variables.extend([f"RfR Total Costs"])
 
         dike_model.outcomes = [
             ScalarOutcome(
-                "Expected Annual Damage",
-                variable_name=[var for var in damage_variables],
+                "All Costs",
+                variable_name=[var for var in cost_variables],
                 function=sum_over,
                 kind=direction,
-            ),
+            )
+        ]
+
+    # THIRD PROBLEM FORMULATION of Zutphen
+    elif problem_formulation_id == 2:
+
+        dike_cost_variables = []
+        evac_cost_variables = []
+        casuality_variables = []
+
+        dike_cost_variables.extend(
+            [f"{dike}_Dike Investment Costs" for dike in function.dikelist]
+        )
+
+        dike_model.outcomes = [
+
+
             ScalarOutcome(
                 "Dike Investment Costs",
                 variable_name=[var for var in dike_cost_variables],
-                function=sum_over,
-                kind=direction,
-            ),
-            ScalarOutcome(
-                "RfR Investment Costs",
-                variable_name=[var for var in rfr_costs_variables],
                 function=sum_over,
                 kind=direction,
             ),
@@ -243,13 +224,13 @@ def get_model_for_problem_formulation(problem_formulation_id):
             ),
             ScalarOutcome(
                 "Expected Number of Deaths",
-                variable_name=[var for var in casuality_varaibles],
+                variable_name=[var for var in casuality_variables],
                 function=sum_over,
                 kind=direction,
             ),
         ]
 
-    # Disaggregate over locations:
+    # FOURTH PROBLEM FORMULATION of Doesburg and Cortenoever
     elif problem_formulation_id == 3:
         outcomes = []
 
@@ -295,7 +276,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
 
         dike_model.outcomes = outcomes
 
-    # Disaggregate over time:
+    # FIFTH PROBLEM FORMULATION of Overijssel
     elif problem_formulation_id == 4:
         outcomes = []
 
