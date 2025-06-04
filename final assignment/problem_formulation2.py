@@ -168,7 +168,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
             ),
             ScalarOutcome(
                 "Dike Investment Costs",
-                variable_name=[var for var in rfr_cost_variables],
+                variable_name=[var for var in dike_cost_variables],
                 function=sum_over,
                 kind=direction,
             ),
