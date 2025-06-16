@@ -207,6 +207,9 @@ def get_model_for_problem_formulation(problem_formulation_id):
             [f"{dike}_Dike Investment Costs" for dike in ['A.3']]
         )
 
+        evac_cost_variables.extend([f"Evacuation Costs"])
+        casuality_variables.extend([f"Expected Number of Deaths"])
+
         dike_model.outcomes = [
 
 
@@ -240,6 +243,9 @@ def get_model_for_problem_formulation(problem_formulation_id):
         dike_cost_variables.extend(
             [f"{dike}_Dike Investment Costs" for dike in ['A.1', 'A.2']]
         )
+
+        evac_cost_variables.extend([f"Evacuation Costs"])
+        casuality_variables.extend([f"Expected Number of Deaths"])
 
         dike_model.outcomes = [
 
