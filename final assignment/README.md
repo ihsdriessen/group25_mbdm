@@ -12,7 +12,7 @@ To determine effective flood risk management strategies for Waterboard Veluwe th
 
 ## Tools and Techniques
 
-- **Exploratory Modeling Workbench (EMW)**: Simulation and uncertainty analysis.
+- **Exploratory Modeling Analysis Workbench (EMA)**: Simulation and uncertainty analysis.
 - **PRIM (Patient Rule Induction Method)**: Scenario discovery.
 - **Sobol & Extra Trees**: Sensitivity analysis.
 - **Multi-objective Robust Decision Making (MORDM)**: Robust optimization.
